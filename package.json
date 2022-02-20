@@ -1,0 +1,35 @@
+{
+  "name": "fava-income-reports",
+  "license": "MIT",
+  "source": [
+    "frontend/MonthlyPnL.html",
+    "frontend/Sankey.html"
+  ],
+  "targets": {
+    "default": {
+      "distDir": "fava_income_reports/templates"
+    }
+  },
+  "parcelIgnore": [
+    "{{.*}}",
+    "does_not_exist"
+  ],
+  "scripts": {
+    "build": "parcel build",
+    "watch": "parcel watch",
+    "format": "prettier -w frontend"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.1.0",
+    "@types/d3-sankey": "^0.11.2",
+    "buffer": "^6.0.3",
+    "parcel": "^2.3.1",
+    "parcel-resolver-ignore": "^2.0.0",
+    "prettier": "^2.5.1"
+  },
+  "dependencies": {
+    "d3": "^7.3.0",
+    "d3-sankey": "^0.12.3",
+    "echarts": "^5.3.0"
+  }
+}

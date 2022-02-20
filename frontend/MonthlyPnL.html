@@ -1,0 +1,14 @@
+<!-- https://github.com/beancount/fava/issues/1175 -->
+<script>document.write("<span id='fava-extension-javascript-loaded' />")</script>
+<img src="does_not_exist" style="display:none" onerror="if(!document.getElementById('fava-extension-javascript-loaded')){window.location.reload()}">
+
+{% set report = extension.monthly_pnl() %}
+<script id="report-data" type="application/json">{{ report|tojson }}</script>
+
+<div id="monthly-pnl-chart" style="height: 500px"></div>
+<script type="module">
+  import { monthlyPnLChart } from "./charts";
+
+  const report = JSON.parse(document.getElementById("report-data").innerHTML);
+  monthlyPnLChart("monthly-pnl-chart", report["currency"], report["data"]);
+</script>

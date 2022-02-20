@@ -1,0 +1,71 @@
+<!-- https://github.com/beancount/fava/issues/1175 -->
+<script>document.write("<span id='fava-extension-javascript-loaded' />")</script>
+<img src="does_not_exist" style="display:none" onerror="if(!document.getElementById('fava-extension-javascript-loaded')){window.location.reload()}">
+
+{% set page = request.args.get('page', 'sankey_full') %}
+<div class="headerline">
+  {% for key, label in [
+    ('sankey_full', _('Sankey (Full)')),
+    ('sankey_custom', _('Sankey (Custom)')),
+  ] %}
+  <h3>
+    {% if page == key %}
+      {{ label }}
+    {% else %}
+      <a href="{{ url_for('extension_report', report_name='Sankey', page=key) }}">{{ label }}</a>
+    {% endif %}
+  </h3>
+  {% endfor %}
+</div>
+
+{% set report = extension.sankey_full() if page == 'sankey_full' else extension.sankey_custom() %}
+<script id="report-data" type="application/json">{{ report|tojson }}</script>
+
+<h2>{{ report.date_first }} - {{ report.date_last }}</h2>
+
+<strong>Interval:</strong>
+<a id="sankey-interval-total">Total</a> |
+<a id="sankey-interval-monthly">Per Month</a>
+<br />
+
+<strong>Align:</strong>
+<a id="sankey-align-left">Left</a> |
+<a id="sankey-align-justify">Justify</a> |
+<a id="sankey-align-right">Right</a>
+<br /><br />
+
+<div id="sankey-chart" style="width: 2000px; height: 1500px"></div>
+<script type="module">
+  import { sankeyChart } from "./sankey.ts";
+
+  const report = JSON.parse(document.getElementById("report-data").innerHTML);
+  let sankeyOptions = {
+    element_id: "sankey-chart",
+    data: report["data"],
+    align: "left",
+    interval: "total",
+  };
+  sankeyChart(sankeyOptions);
+
+  document.getElementById("sankey-interval-total").addEventListener("click", event => {
+    sankeyOptions.interval = "total";
+    sankeyChart(sankeyOptions);
+  });
+  document.getElementById("sankey-interval-monthly").addEventListener("click", event => {
+    sankeyOptions.interval = "monthly";
+    sankeyChart(sankeyOptions);
+  });
+
+  document.getElementById("sankey-align-left").addEventListener("click", event => {
+    sankeyOptions.align = "left";
+    sankeyChart(sankeyOptions);
+  });
+  document.getElementById("sankey-align-justify").addEventListener("click", event => {
+    sankeyOptions.align = "justify";
+    sankeyChart(sankeyOptions);
+  });
+  document.getElementById("sankey-align-right").addEventListener("click", event => {
+    sankeyOptions.align = "right";
+    sankeyChart(sankeyOptions);
+  });
+</script>
