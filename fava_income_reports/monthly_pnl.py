@@ -1,3 +1,4 @@
+import datetime
 import yaml
 from typing import List, Tuple
 from collections import defaultdict
@@ -35,9 +36,10 @@ class MonthlyPnL(FavaExtensionBase):
         inv = -1 if invert else 1
         return [inv * data[month] for month in months]
 
-    def monthly_pnl(self):
+    def monthly_pnl(self, chart_id):
         date_first = self.ledger._date_first
-        date_last = self.ledger._date_last
+        date_last = self.ledger._date_last - datetime.timedelta(days=1)
+
         months = list(self._iter_months((date_first.year, date_first.month), (date_last.year, date_last.month)))
         xaxis = [f"{month:02d}/{year}" for year, month in months]
         operating_currency = self.ledger.options["operating_currency"][0]
@@ -49,18 +51,32 @@ class MonthlyPnL(FavaExtensionBase):
         except Exception as ex:
             raise FavaAPIException(f"Cannot read configuration file {config_file}: " + str(ex))
 
+        chart = config[chart_id]
         all_series = []
-        for bar_name, bar_items in config.items():
+        for bar_name, bar_items in chart["series"].items():
             for series in bar_items:
+                if "account" in series:
+                    query = f"account ~ '^{series['account']}'"
+                    link = f"/beancount/account/{series['account']}/"
+                elif "query" in series:
+                    query = series["query"]
+                    link = series.get("link")
+                else:
+                    raise FavaAPIException("Neither 'query' nor 'account' found in series definition.")
                 invert = series.get("invert", False)
+
                 all_series.append(
                     {
-                        "name": series["name"],
+                        "name": series.get("name", "Unnamed"),
                         "stack": bar_name,
-                        "link": series["link"],
-                        "color": series["color"],
-                        "data": self._query(series["query"], months, invert),
+                        "link": link,
+                        "color": series.get("color"),
+                        "data": self._query(query, months, invert),
                     }
                 )
 
-        return {"currency": operating_currency, "data": {"xaxis": xaxis, "series": all_series}}
+        return {
+            "config": config,
+            "currency": operating_currency,
+            "chart": {"xaxis": xaxis, "series": all_series},
+        }

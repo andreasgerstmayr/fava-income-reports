@@ -3,7 +3,7 @@ import * as echarts from "echarts";
 function getCurrencyFormatter(currency: string) {
   const currencyFormat = new Intl.NumberFormat(undefined, {
     style: "currency",
-    currency: currency,
+    currency,
   });
   return (value: any) => {
     return currencyFormat.format(value);
@@ -20,12 +20,7 @@ export function monthlyPnLChart(elementId: string, currency: string, data: any) 
     ...series,
   }));
   const option: echarts.EChartsOption = {
-    title: {
-      left: "center",
-      text: "Monthly PnL",
-    },
     tooltip: {
-      trigger: "item",
       valueFormatter: currencyFormatter,
     },
     legend: {
@@ -35,6 +30,7 @@ export function monthlyPnLChart(elementId: string, currency: string, data: any) 
     grid: {
       left: "3%",
       right: "150px",
+      top: "3%",
       bottom: "3%",
       containLabel: true,
     },

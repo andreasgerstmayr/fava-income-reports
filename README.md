@@ -14,17 +14,16 @@ pip install git+https://github.com/andreasgerstmayr/fava-income-reports.git
 
 Enable this plugin in Fava by adding the following lines to your ledger:
 ```
-2010-01-0 custom "fava-extension" "fava_income_reports"
+2010-01-01 custom "fava-extension" "fava_income_reports"
 ```
 
 ## Configuration
-`monthly_pnl.yaml`
-```
-```
+Please take a look at the example [monthly_pnl.yaml](example/monthly_pnl.yaml) and [sankey.yaml](example/sankey.yaml) example configuration files.
 
-The sankey chart supports two modes: a *full* mode showing all income and expense accounts, and a *custom* mode showing data from beancount queries (BQL) defined in the `sankey.yaml` configuration file:
-```
-```
+The sankey chart supports two modes: a *full* mode showing all income and expense accounts, and a *custom* mode showing data from beancount queries (BQL) defined in the `sankey.yaml` configuration file.
+
+## View Example Ledger
+`cd example; fava example.beancount`
 
 ## Building from Source
 Run `make build` to compile the frontend. The compiled and bundled frontend will be placed in `fava_income_reports/templates`.

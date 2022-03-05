@@ -94,7 +94,7 @@ class Sankey(FavaExtensionBase):
             "date_first": date_first,
             "date_last": date_last,
             "currency": operating_currency,
-            "data": {
+            "chart": {
                 "nodes": nodes,
                 "links": links,
                 "days": (date_last - date_first).days + 1,
@@ -175,5 +175,5 @@ class Sankey(FavaExtensionBase):
             "date_first": self.ledger._date_first,
             "date_last": self.ledger._date_last,
             "currency": operating_currency,
-            "data": {"nodes": nodes, "links": links},
+            "chart": {"nodes": nodes, "links": links},
         }
