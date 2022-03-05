@@ -5,7 +5,8 @@ fava-income-reports adds new charts to [Fava](https://github.com/beancount/fava)
 
 All charts support filtering using the Fava filter options (by time, account, tags and other metadata).
 
-[![Screenshot](docs/screenshots/report.png)](docs/screenshots/report.png)
+[![Monthly PnL](example/monthly_pnl.png)](example/monthly_pnl.png)
+[![Sankey](example/sankey.png)](example/sankey.png)
 
 ## Installation
 ```

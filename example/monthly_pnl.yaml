@@ -1,0 +1,32 @@
+- name: Monthly PnL
+  series:
+    income:
+    - name: Hooli
+      account: Income:US:Hooli
+      color: rgb(49, 130, 189)
+      invert: yes
+
+    - name: Investments
+      account: Income:US:ETrade
+      color: rgb(49, 163, 84)
+      invert: yes
+
+    expenses:
+    - name: Food
+      account: Expenses:Food
+      color: rgb(158, 154, 200)
+
+    - name: Home
+      account: Expenses:Home
+      color: rgb(161, 217, 155)
+
+    - name: Taxes
+      account: Expenses:Taxes
+      color: rgb(253, 141, 60)
+
+- name: Trips
+  series:
+    trips:
+    - name: Trips
+      query: account ~ '^Expenses' AND ('trip-san-francisco-2020' IN tags OR 'trip-chicago-2021' IN tags)
+      link: /beancount/account/Expenses/?filter=%23trip-chicago-2021%2C%23trip-san-francisco-2020%2C%23trip-san-francisco-2021
