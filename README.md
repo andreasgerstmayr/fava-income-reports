@@ -1,4 +1,4 @@
-# fava-income-reports
+# Fava Income Reports
 fava-income-reports adds new charts to [Fava](https://github.com/beancount/fava):
 * a monthly profit and loss bar chart
 * a sankey chart with all income and expense accounts, and their hierarchy
@@ -30,6 +30,9 @@ The sankey chart supports two modes: a *full* mode showing all income and expens
 Run `make build` to compile the frontend. The compiled and bundled frontend will be placed in `fava_income_reports/templates`.
 
 You can run `make watch` to automatically rebuild the frontend for any changes.
+
+## Related Projects
+* [Fava Portfolio Returns](https://github.com/andreasgerstmayr/fava-portfolio-returns)
 
 ## Acknowledgements
 Thanks to Martin Blais and all contributors of [beancount](https://github.com/beancount/beancount),
