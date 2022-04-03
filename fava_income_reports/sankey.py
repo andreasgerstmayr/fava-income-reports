@@ -83,13 +83,13 @@ class Sankey(FavaExtensionBase):
         add_expenses(expenses, name="Income")
 
         savings = -self._get_node_value(income) - self._get_node_value(expenses)
-        nodes.append({"name": "Savings"})
-        links.append({"source": "Income", "target": "Savings", "value": savings})
+        if savings > 0:
+            nodes.append({"name": "Savings"})
+            links.append({"source": "Income", "target": "Savings", "value": savings})
 
         date_first = self.ledger._date_first
         date_last = self.ledger._date_last - datetime.timedelta(days=1)
         operating_currency = self.ledger.options["operating_currency"][0]
-
         return {
             "date_first": date_first,
             "date_last": date_last,
@@ -170,10 +170,16 @@ class Sankey(FavaExtensionBase):
                 nodes.append(node)
                 links.append({"source": "Budget", "target": node["name"], "value": node["value"]})
 
+        date_first = self.ledger._date_first
+        date_last = self.ledger._date_last - datetime.timedelta(days=1)
         operating_currency = self.ledger.options["operating_currency"][0]
         return {
-            "date_first": self.ledger._date_first,
-            "date_last": self.ledger._date_last,
+            "date_first": date_first,
+            "date_last": date_last,
             "currency": operating_currency,
-            "chart": {"nodes": nodes, "links": links},
+            "chart": {
+                "nodes": nodes,
+                "links": links,
+                "days": (date_last - date_first).days + 1,
+            },
         }
