@@ -11,6 +11,10 @@
       color: rgb(49, 163, 84)
       invert: yes
 
+    - name: Other income
+      type: other_income
+      invert: yes
+
     expenses:
     - name: Food
       account: Expenses:Food
@@ -23,6 +27,9 @@
     - name: Taxes
       account: Expenses:Taxes
       color: rgb(253, 141, 60)
+
+    - name: Other expenses
+      type: other_expenses
 
 - name: Trips
   series:

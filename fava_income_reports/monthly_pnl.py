@@ -53,27 +53,44 @@ class MonthlyPnL(FavaExtensionBase):
 
         chart = config[chart_id]
         all_series = []
-        for bar_name, bar_items in chart["series"].items():
-            for series in bar_items:
+        for stack_name, stack_items in chart["series"].items():
+            stack_series = []
+            for series in stack_items:
+                invert = series.get("invert", False)
                 if "account" in series:
                     query = f"account ~ '^{series['account']}'"
                     link = f"/beancount/account/{series['account']}/"
+                    data = self._query(query, months, invert)
                 elif "query" in series:
                     query = series["query"]
                     link = series.get("link")
+                    data = self._query(query, months, invert)
+                elif "type" in series:
+                    if series["type"] == "other_income":
+                        query = f"account ~ '^Income'"
+                    elif series["type"] == "other_expenses":
+                        query = f"account ~ '^Expenses'"
+                    else:
+                        raise FavaAPIException(
+                            "Invalid value for type parameter. Allowed values: 'other_income' and 'other_expenses'."
+                        )
+                    link = series.get("link")
+                    data = self._query(query, months, invert)
+                    for i in range(len(data)):
+                        data[i] -= sum(s["data"][i] for s in stack_series)
                 else:
-                    raise FavaAPIException("Neither 'query' nor 'account' found in series definition.")
-                invert = series.get("invert", False)
+                    raise FavaAPIException("Neither 'query', 'account' or 'type' found in series definition.")
 
-                all_series.append(
+                stack_series.append(
                     {
                         "name": series.get("name", "Unnamed"),
-                        "stack": bar_name,
+                        "stack": stack_name,
                         "link": link,
                         "color": series.get("color"),
-                        "data": self._query(query, months, invert),
+                        "data": data,
                     }
                 )
+            all_series.extend(stack_series)
 
         return {
             "config": config,
