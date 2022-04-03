@@ -19,6 +19,9 @@ format: deps  ## format source
 	yarn run format
 	black --line-length 120 fava_income_reports
 
+clean:  ## clean build artifacts
+	rm -rf .parcel-cache fava_income_reports/templates/*.html
+
 
 ##@ Helpers
 
