@@ -12,8 +12,9 @@
       invert: yes
 
     - name: Other income
-      type: other_income
+      account: Income
       invert: yes
+      remainder: yes
 
     expenses:
     - name: Food
@@ -29,7 +30,8 @@
       color: rgb(253, 141, 60)
 
     - name: Other expenses
-      type: other_expenses
+      account: Expenses
+      remainder: yes
 
 - name: Trips
   series:
