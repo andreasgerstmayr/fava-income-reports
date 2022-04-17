@@ -4,6 +4,7 @@ from beancount.query.query import run_query
 from fava.ext import FavaExtensionBase
 from fava.helpers import FavaAPIException
 from fava.core.conversion import get_market_value
+from . import utils
 
 
 class Sankey(FavaExtensionBase):
@@ -65,7 +66,7 @@ class Sankey(FavaExtensionBase):
                 if not value:
                     continue
 
-                nodes.append({"name": node.name})
+                nodes.append({"name": node.name, "link": f"/beancount/account/{node.name}/"})
                 links.append({"source": node.name, "target": root.name, "value": -value})
                 add_income(node)
 
@@ -75,14 +76,16 @@ class Sankey(FavaExtensionBase):
                 if not value:
                     continue
 
-                nodes.append({"name": node.name})
+                nodes.append({"name": node.name, "link": f"/beancount/account/{node.name}/"})
                 links.append({"source": name or root.name, "target": node.name, "value": value})
                 add_expenses(node)
 
         add_income(income)
         add_expenses(expenses, name="Income")
 
-        savings = -self._get_node_value(income) - self._get_node_value(expenses)
+        total_income = self._get_node_value(income) or 0
+        total_expenses = self._get_node_value(expenses) or 0
+        savings = -total_income - total_expenses
         if savings > 0:
             nodes.append({"name": "Savings"})
             links.append({"source": "Income", "target": "Savings", "value": savings})
@@ -121,22 +124,24 @@ class Sankey(FavaExtensionBase):
         income = []
         expenses = []
         for node in config.get("income", []):
+            query, link = utils.get_query_and_link(node)
             invert = node.get("invert", True)
             income.append(
                 {
-                    "name": node["name"],
-                    "link": node["link"],
-                    "value": (-1 if invert else 1) * self._query(node["query"]),
+                    "name": node.get("name", "Unnamed"),
+                    "link": link,
+                    "value": (-1 if invert else 1) * self._query(query),
                     "ignore": node.get("ignore", False),
                 }
             )
         for node in config.get("expenses", []):
+            query, link = utils.get_query_and_link(node)
             invert = node.get("invert", False)
             expenses.append(
                 {
-                    "name": node["name"],
-                    "link": node["link"],
-                    "value": (-1 if invert else 1) * self._query(node["query"]),
+                    "name": node.get("name", "Unnamed"),
+                    "link": link,
+                    "value": (-1 if invert else 1) * self._query(query),
                     "ignore": node.get("ignore", False),
                 }
             )

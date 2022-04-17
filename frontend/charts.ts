@@ -54,6 +54,7 @@ export function monthlyPnLChart(elementId: string, currency: string, data: any) 
       if (series.name === params.seriesName) {
         const date_spl = params.name.split("/");
         const time = date_spl[1] + "-" + date_spl[0];
+        if (!series.link) break;
         if (series.link.indexOf("?") == -1) {
           window.location.assign(series.link + "?time=" + time);
         } else {

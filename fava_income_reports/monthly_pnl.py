@@ -6,6 +6,7 @@ from decimal import Decimal
 from beancount.query.query import run_query
 from fava.ext import FavaExtensionBase
 from fava.helpers import FavaAPIException
+from . import utils
 
 
 class MonthlyPnL(FavaExtensionBase):
@@ -56,15 +57,7 @@ class MonthlyPnL(FavaExtensionBase):
         for stack_name, stack_items in chart["series"].items():
             stack_series = []
             for series in stack_items:
-                if "account" in series:
-                    query = f"account ~ '^{series['account']}'"
-                    link = series.get("link", f"/beancount/account/{series['account']}/")
-                elif "query" in series:
-                    query = series["query"]
-                    link = series.get("link")
-                else:
-                    raise FavaAPIException("Neither 'query' nor 'account' found in series definition.")
-
+                query, link = utils.get_query_and_link(series)
                 invert = series.get("invert", False)
                 remainder = series.get("remainder", False)
                 data = self._query(query, months, invert)

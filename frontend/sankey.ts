@@ -145,7 +145,7 @@ export function sankeyChart(options) {
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .text((d) => `${d.name.split(":").pop()}: ${format(d.value)}`)
       .on("click", (e, node) => {
-        location.assign(`/beancount/account/${node.name}/${location.search}`);
+        if (node.link) window.location.assign(node.link);
       });
 
     return svg.node();

@@ -1,18 +1,15 @@
 income:
 - name: Hooli
-  link: /beancount/account/Income:US:Hooli/
   query: account ~ '^Income:US:Hooli' AND NOT account ~ '^Income:US:Hooli:Vacation'
+  link: /beancount/account/Income:US:Hooli/
 
 expenses:
 - name: Food
-  link: /beancount/account/Expenses:Food/
-  query: account ~ '^Expenses:Food'
+  account: Expenses:Food
 
 - name: Home
-  link: /beancount/account/Expenses:Home/
-  query: account ~ '^Expenses:Home'
+  account: Expenses:Home
 
 - name: Taxes
-  link: /beancount/account/Expenses:Taxes/
+  account: Expenses:Taxes
   color: rgb(253, 141, 60)
-  query: account ~ '^Expenses:Taxes'
