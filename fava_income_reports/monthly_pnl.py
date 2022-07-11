@@ -4,6 +4,7 @@ from typing import List, Tuple
 from collections import defaultdict
 from decimal import Decimal
 from beancount.query.query import run_query
+from fava.context import g
 from fava.ext import FavaExtensionBase
 from fava.helpers import FavaAPIException
 from . import utils
@@ -29,7 +30,7 @@ class MonthlyPnL(FavaExtensionBase):
     def _query(self, where: str, months: List[Tuple], invert=False):
         """executes a query and returns values grouped by the requested months"""
         bql = f"SELECT year, month, CONVERT(VALUE(SUM(position)), 'EUR') AS val WHERE {where} GROUP BY year, month"
-        _, rrows = run_query(self.ledger.entries, self.ledger.options, bql)
+        _, rrows = run_query(g.filtered.entries, self.ledger.options, bql)
         data = defaultdict(Decimal)
         for row in rrows:
             if not row.val.is_empty():
@@ -38,8 +39,8 @@ class MonthlyPnL(FavaExtensionBase):
         return [inv * data[month] for month in months]
 
     def monthly_pnl(self, chart_id):
-        date_first = self.ledger._date_first
-        date_last = self.ledger._date_last - datetime.timedelta(days=1)
+        date_first = g.filtered._date_first
+        date_last = g.filtered._date_last - datetime.timedelta(days=1)
 
         months = list(self._iter_months((date_first.year, date_first.month), (date_last.year, date_last.month)))
         xaxis = [f"{month:02d}/{year}" for year, month in months]

@@ -1,6 +1,7 @@
 import datetime
 import yaml
 from beancount.query.query import run_query
+from fava.context import g
 from fava.ext import FavaExtensionBase
 from fava.helpers import FavaAPIException
 from fava.core.conversion import get_market_value
@@ -13,7 +14,7 @@ class Sankey(FavaExtensionBase):
 
     def _get_node_value(self, node):
         operating_currency = self.ledger.options["operating_currency"][0]
-        return node.balance_children.reduce(get_market_value, self.ledger.price_map, self.ledger.end_date).get(
+        return node.balance_children.reduce(get_market_value, self.ledger.price_map, g.filtered.end_date).get(
             operating_currency
         )
 
@@ -54,8 +55,8 @@ class Sankey(FavaExtensionBase):
         return children
 
     def sankey_full(self):
-        income = self.ledger.root_tree.get("Income")
-        expenses = self.ledger.root_tree.get("Expenses")
+        income = g.filtered.root_tree.get("Income")
+        expenses = g.filtered.root_tree.get("Expenses")
 
         nodes = [{"name": "Income"}]
         links = []
@@ -90,8 +91,8 @@ class Sankey(FavaExtensionBase):
             nodes.append({"name": "Savings"})
             links.append({"source": "Income", "target": "Savings", "value": savings})
 
-        date_first = self.ledger._date_first
-        date_last = self.ledger._date_last - datetime.timedelta(days=1)
+        date_first = g.filtered._date_first
+        date_last = g.filtered._date_last - datetime.timedelta(days=1)
         operating_currency = self.ledger.options["operating_currency"][0]
         return {
             "date_first": date_first,
@@ -106,7 +107,7 @@ class Sankey(FavaExtensionBase):
 
     def _query(self, where: str):
         bql = f"SELECT CONVERT(VALUE(SUM(position)), 'EUR') AS val WHERE {where}"
-        _, rrows = run_query(self.ledger.entries, self.ledger.options, bql)
+        _, rrows = run_query(g.filtered.entries, self.ledger.options, bql)
         if rrows:
             row = rrows[0]
             if row and not row.val.is_empty():
@@ -175,8 +176,8 @@ class Sankey(FavaExtensionBase):
                 nodes.append(node)
                 links.append({"source": "Budget", "target": node["name"], "value": node["value"]})
 
-        date_first = self.ledger._date_first
-        date_last = self.ledger._date_last - datetime.timedelta(days=1)
+        date_first = g.filtered._date_first
+        date_last = g.filtered._date_last - datetime.timedelta(days=1)
         operating_currency = self.ledger.options["operating_currency"][0]
         return {
             "date_first": date_first,
