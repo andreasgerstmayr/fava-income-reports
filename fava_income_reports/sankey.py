@@ -106,7 +106,7 @@ class Sankey(FavaExtensionBase):
         }
 
     def _query(self, where: str):
-        bql = f"SELECT CONVERT(VALUE(SUM(position)), 'EUR') AS val WHERE {where}"
+        bql = f"SELECT CONVERT(VALUE(SUM(position)), 'EUR') AS val {where}"
         _, rrows = run_query(g.filtered.entries, self.ledger.options, bql)
         if rrows:
             row = rrows[0]
@@ -151,7 +151,7 @@ class Sankey(FavaExtensionBase):
             {
                 "name": "Other Income",
                 "link": "/beancount/account/Income/",
-                "value": -self._query("account ~ '^Income:'")
+                "value": -self._query("WHERE account ~ '^Income:'")
                 - sum(node["value"] for node in income if not node["ignore"]),
             }
         )
@@ -159,7 +159,7 @@ class Sankey(FavaExtensionBase):
             {
                 "name": "Other Expenses",
                 "link": "/beancount/account/Expenses/",
-                "value": self._query("account ~ '^Expenses:'")
+                "value": self._query("WHERE account ~ '^Expenses:'")
                 - sum(node["value"] for node in expenses if not node["ignore"]),
             }
         )

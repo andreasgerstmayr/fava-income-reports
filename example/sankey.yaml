@@ -1,6 +1,6 @@
 income:
 - name: Hooli
-  query: account ~ '^Income:US:Hooli' AND NOT account ~ '^Income:US:Hooli:Vacation'
+  query: WHERE account ~ '^Income:US:Hooli' AND NOT account ~ '^Income:US:Hooli:Vacation'
   link: /beancount/account/Income:US:Hooli/
 
 expenses:

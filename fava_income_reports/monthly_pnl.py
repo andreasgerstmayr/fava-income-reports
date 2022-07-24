@@ -29,7 +29,7 @@ class MonthlyPnL(FavaExtensionBase):
 
     def _query(self, where: str, months: List[Tuple], invert=False):
         """executes a query and returns values grouped by the requested months"""
-        bql = f"SELECT year, month, CONVERT(VALUE(SUM(position)), 'EUR') AS val WHERE {where} GROUP BY year, month"
+        bql = f"SELECT year, month, CONVERT(VALUE(SUM(position)), 'EUR') AS val {where} GROUP BY year, month"
         _, rrows = run_query(g.filtered.entries, self.ledger.options, bql)
         data = defaultdict(Decimal)
         for row in rrows:

@@ -37,5 +37,5 @@
   series:
     trips:
     - name: Trips
-      query: account ~ '^Expenses' AND ('trip-san-francisco-2020' IN tags OR 'trip-chicago-2021' IN tags)
+      query: WHERE account ~ '^Expenses' AND ('trip-san-francisco-2020' IN tags OR 'trip-chicago-2021' IN tags)
       link: /beancount/account/Expenses/?filter=%23trip-chicago-2021%2C%23trip-san-francisco-2020%2C%23trip-san-francisco-2021
