@@ -11,7 +11,7 @@ function getCurrencyFormatter(currency: string) {
 }
 
 export function monthlyPnLChart(elementId: string, currency: string, data: any) {
-  const chartDom = document.getElementById(elementId);
+  const chartDom = document.getElementById(elementId)!;
   const chart = echarts.init(chartDom);
   const currencyFormatter = getCurrencyFormatter(currency);
 
@@ -68,7 +68,7 @@ export function monthlyPnLChart(elementId: string, currency: string, data: any) 
 
 // unused
 export function sankeyChart(elementId: string, currency: string, data: any) {
-  const chartDom = document.getElementById(elementId);
+  const chartDom = document.getElementById(elementId)!;
   const chart = echarts.init(chartDom);
   const currencyFormatter = getCurrencyFormatter(currency);
 
