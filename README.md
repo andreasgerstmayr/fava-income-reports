@@ -1,3 +1,7 @@
+# Deprecated
+This project is deprecated and not maintained anymore.
+The successor is [fava-dashboards](https://github.com/andreasgerstmayr/fava-dashboards), which provides a lightweight, more flexible alternative to create custom charts and sankey diagrams with beancount and Fava.
+
 # Fava Income Reports
 fava-income-reports adds new charts to [Fava](https://github.com/beancount/fava):
 * a monthly profit and loss bar chart
